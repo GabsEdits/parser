@@ -12,7 +12,9 @@ export function parseJsonFeed(input: string): ParsedFeed {
   const feed = ensureObject(data, "Invalid JSON Feed: expected object root");
   const version = typeof feed.version === "string" ? feed.version : "";
   if (!version.startsWith("https://jsonfeed.org/version/")) {
-    throw new FeedParserError("Invalid JSON Feed: unsupported or missing version");
+    throw new FeedParserError(
+      "Invalid JSON Feed: unsupported or missing version",
+    );
   }
 
   const title = typeof feed.title === "string" ? feed.title : undefined;
@@ -30,10 +32,16 @@ export function parseJsonFeed(input: string): ParsedFeed {
       title: typeof node.title === "string" ? node.title : undefined,
       url: typeof node.url === "string" ? node.url : undefined,
       summary: typeof node.summary === "string" ? node.summary : undefined,
-      contentText: typeof node.content_text === "string" ? node.content_text : undefined,
-      contentHtml: typeof node.content_html === "string" ? node.content_html : undefined,
+      contentText: typeof node.content_text === "string"
+        ? node.content_text
+        : undefined,
+      contentHtml: typeof node.content_html === "string"
+        ? node.content_html
+        : undefined,
       datePublished: safeIso(
-        typeof node.date_published === "string" ? node.date_published : undefined,
+        typeof node.date_published === "string"
+          ? node.date_published
+          : undefined,
       ),
       dateModified: safeIso(
         typeof node.date_modified === "string" ? node.date_modified : undefined,
@@ -44,7 +52,9 @@ export function parseJsonFeed(input: string): ParsedFeed {
   return {
     format: "json",
     title,
-    description: typeof feed.description === "string" ? feed.description : undefined,
+    description: typeof feed.description === "string"
+      ? feed.description
+      : undefined,
     homePageUrl: typeof feed.home_page_url === "string"
       ? feed.home_page_url
       : undefined,
@@ -57,4 +67,3 @@ export function parseJsonFeed(input: string): ParsedFeed {
     raw: feed,
   };
 }
-

@@ -1,4 +1,9 @@
-import { FeedParserError, type ParsedAuthor, type ParsedFeed, type ParsedItem } from "./types.ts";
+import {
+  FeedParserError,
+  type ParsedAuthor,
+  type ParsedFeed,
+  type ParsedItem,
+} from "./types.ts";
 import { parseXml } from "./xml.ts";
 import { safeIso, toArray, toObject, toText } from "./utils.ts";
 
@@ -58,8 +63,12 @@ function parseAtomEntries(feed: Record<string, unknown>): ParsedItem[] {
       title: toText(node.title),
       url: pickAtomLink(node),
       summary: toText(node.summary),
-      contentText: content ? toText(content["#text"]) : toText(node.content as any),
-      contentHtml: content?.["@_type"] === "html" ? toText(content["#text"]) : undefined,
+      contentText: content
+        ? toText(content["#text"])
+        : toText(node.content as any),
+      contentHtml: content?.["@_type"] === "html"
+        ? toText(content["#text"])
+        : undefined,
       datePublished: safeIso(toText(node.published)),
       dateModified: safeIso(toText(node.updated)),
     };
@@ -85,4 +94,3 @@ function pickAtomLink(
 
   return undefined;
 }
-

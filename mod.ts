@@ -14,4 +14,3 @@ export type {
 } from "./src/types.ts";
 
 export { FeedParserError } from "./src/types.ts";
-

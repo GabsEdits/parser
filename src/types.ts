@@ -38,4 +38,3 @@ export class FeedParserError extends Error {
     this.name = "FeedParserError";
   }
 }
-

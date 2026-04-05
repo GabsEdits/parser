@@ -11,16 +11,28 @@ function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
 
-function assertEquals(actual: unknown, expected: unknown, message: string): void {
+function assertEquals(
+  actual: unknown,
+  expected: unknown,
+  message: string,
+): void {
   if (actual !== expected) {
     throw new Error(`${message}: expected ${expected}, got ${actual}`);
   }
 }
 
 Deno.test("detectFormat detects RSS/Atom/JSON", () => {
-  assertEquals(detectFormat("<rss version=\"2.0\"></rss>"), "rss", "Detect RSS");
-  assertEquals(detectFormat("<feed xmlns=\"http://www.w3.org/2005/Atom\"></feed>"), "atom", "Detect Atom");
-  assertEquals(detectFormat('{"version":"https://jsonfeed.org/version/1"}'), "json", "Detect JSON");
+  assertEquals(detectFormat('<rss version="2.0"></rss>'), "rss", "Detect RSS");
+  assertEquals(
+    detectFormat('<feed xmlns="http://www.w3.org/2005/Atom"></feed>'),
+    "atom",
+    "Detect Atom",
+  );
+  assertEquals(
+    detectFormat('{"version":"https://jsonfeed.org/version/1"}'),
+    "json",
+    "Detect JSON",
+  );
 });
 
 Deno.test("parseRss parses basic feed fields", () => {
@@ -104,7 +116,7 @@ Deno.test("parseJsonFeed parses feed and items", () => {
 });
 
 Deno.test("parseFeed auto-detects and parses", () => {
-  const rss = "<rss version=\"2.0\"><channel><title>T</title></channel></rss>";
+  const rss = '<rss version="2.0"><channel><title>T</title></channel></rss>';
   const parsed = parseFeed(rss);
   assertEquals(parsed.format, "rss", "Auto format");
   assertEquals(parsed.title, "T", "Auto title");
@@ -119,4 +131,3 @@ Deno.test("parseFeed throws on unknown format", () => {
   }
   assert(didThrow, "Expected FeedParserError for unknown format");
 });
-

@@ -1,7 +1,10 @@
 import { FeedParserError } from "./types.ts";
 import type { XmlObject, XmlValue } from "./xml.ts";
 
-export function ensureObject(value: unknown, message: string): Record<string, unknown> {
+export function ensureObject(
+  value: unknown,
+  message: string,
+): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new FeedParserError(message);
   }
@@ -70,4 +73,3 @@ export function safeIso(value: string | undefined): string | undefined {
   if (Number.isNaN(date.getTime())) return undefined;
   return date.toISOString();
 }
-

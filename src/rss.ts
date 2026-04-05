@@ -1,4 +1,9 @@
-import { FeedParserError, type ParsedAuthor, type ParsedFeed, type ParsedItem } from "./types.ts";
+import {
+  FeedParserError,
+  type ParsedAuthor,
+  type ParsedFeed,
+  type ParsedItem,
+} from "./types.ts";
 import { parseXml } from "./xml.ts";
 import { parsePerson, safeIso, toArray, toObject, toText } from "./utils.ts";
 
@@ -79,4 +84,3 @@ function parseRssItems(channel: Record<string, unknown>): ParsedItem[] {
     };
   });
 }
-
