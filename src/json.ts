@@ -1,6 +1,23 @@
 import { FeedParserError, type ParsedFeed, type ParsedItem } from "./types.ts";
 import { ensureObject, safeIso } from "./utils.ts";
 
+/**
+ * Parses a JSON Feed 1.x document string into a normalised {@linkcode ParsedFeed}.
+ *
+ * @param input Raw JSON Feed text (must be valid JSON).
+ * @returns A normalised {@linkcode ParsedFeed} with `format: "json"`.
+ * @throws {FeedParserError} When the input is not valid JSON, the root is not
+ *   an object, the version field is missing or unsupported, or the title is
+ *   absent. Also thrown when any item is not an object.
+ *
+ * @example
+ * ```ts
+ * import { parseJsonFeed } from "jsr:@feed/parser";
+ *
+ * const feed = parseJsonFeed(jsonText);
+ * console.log(feed.title, feed.items.length);
+ * ```
+ */
 export function parseJsonFeed(input: string): ParsedFeed {
   let data: unknown;
   try {

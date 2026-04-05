@@ -7,6 +7,22 @@ import {
 import { parseXml, type XmlObject, type XmlValue } from "./xml.ts";
 import { parsePerson, safeIso, toArray, toObject, toText } from "./utils.ts";
 
+/**
+ * Parses an RSS 2.0 feed string into a normalised {@linkcode ParsedFeed}.
+ *
+ * @param input Raw RSS 2.0 XML text.
+ * @returns A normalised {@linkcode ParsedFeed} with `format: "rss"`.
+ * @throws {FeedParserError} When required elements (`<rss>`, `<channel>`, or
+ *   `<title>`) are missing or when an `<item>` is structurally invalid.
+ *
+ * @example
+ * ```ts
+ * import { parseRss } from "jsr:@feed/parser";
+ *
+ * const feed = parseRss(xmlText);
+ * console.log(feed.title, feed.items.length);
+ * ```
+ */
 export function parseRss(input: string): ParsedFeed {
   const doc = parseXml(input);
   const rss = toObject(doc.rss);

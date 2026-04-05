@@ -7,6 +7,22 @@ import {
 import { parseXml, type XmlObject } from "./xml.ts";
 import { safeIso, toArray, toObject, toText } from "./utils.ts";
 
+/**
+ * Parses an Atom 1.0 feed string into a normalised {@linkcode ParsedFeed}.
+ *
+ * @param input Raw Atom 1.0 XML text.
+ * @returns A normalised {@linkcode ParsedFeed} with `format: "atom"`.
+ * @throws {FeedParserError} When required elements (`<feed>` or `<title>`) are
+ *   missing or when an `<entry>` is structurally invalid.
+ *
+ * @example
+ * ```ts
+ * import { parseAtom } from "jsr:@feed/parser";
+ *
+ * const feed = parseAtom(xmlText);
+ * console.log(feed.title, feed.items.length);
+ * ```
+ */
 export function parseAtom(input: string): ParsedFeed {
   const doc = parseXml(input);
   const feed = toObject(doc.feed);
