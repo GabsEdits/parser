@@ -27,4 +27,3 @@ console.log(format, parsed.title, parsed.items.length);
 - `parseRss(input: string): ParsedFeed`
 - `parseAtom(input: string): ParsedFeed`
 - `parseJsonFeed(input: string): ParsedFeed`
-
