@@ -1,7 +1,7 @@
 import { parseAtom } from "./atom.ts";
 import { parseJsonFeed } from "./json.ts";
 import { parseRss } from "./rss.ts";
-import { FeedParserError, type FeedFormat, type ParsedFeed } from "./types.ts";
+import { type FeedFormat, FeedParserError, type ParsedFeed } from "./types.ts";
 import { detectXmlKind } from "./utils.ts";
 
 export function detectFormat(input: string): FeedFormat {
@@ -29,5 +29,4 @@ export function parseFeed(input: string): ParsedFeed {
   return parseJsonFeed(input);
 }
 
-export { parseRss, parseAtom, parseJsonFeed };
-
+export { parseAtom, parseJsonFeed, parseRss };

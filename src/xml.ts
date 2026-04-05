@@ -123,5 +123,3 @@ function nodeToValue(node: XmlNode): XmlValue {
 
   return value;
 }
-
-
