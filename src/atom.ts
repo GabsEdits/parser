@@ -64,9 +64,7 @@ function parseAtomEntries(feed: XmlObject): ParsedItem[] {
       title: toText(node.title),
       url: pickAtomLink(node),
       summary: toText(node.summary),
-      contentText: content
-        ? toText(content["#text"])
-        : toText(node.content),
+      contentText: content ? toText(content["#text"]) : toText(node.content),
       contentHtml: content && contentType === "html"
         ? toText(content["#text"])
         : undefined,
