@@ -4,7 +4,7 @@ import {
   type ParsedFeed,
   type ParsedItem,
 } from "./types.ts";
-import { parseXml } from "./xml.ts";
+import { parseXml, type XmlObject, type XmlValue } from "./xml.ts";
 import { parsePerson, safeIso, toArray, toObject, toText } from "./utils.ts";
 
 export function parseRss(input: string): ParsedFeed {
@@ -40,16 +40,16 @@ export function parseRss(input: string): ParsedFeed {
   };
 }
 
-function parseRssAuthors(channel: Record<string, unknown>): ParsedAuthor[] {
+function parseRssAuthors(channel: XmlObject): ParsedAuthor[] {
   const values = [
-    ...toArray(channel.author as any),
-    ...toArray(channel.webMaster as any),
-    ...toArray(channel.managingEditor as any),
+    ...toArray(channel.author),
+    ...toArray(channel.webMaster),
+    ...toArray(channel.managingEditor),
   ];
 
   const out: ParsedAuthor[] = [];
   for (const value of values) {
-    const text = toText(value as any);
+    const text = toText(value);
     const parsed = parsePerson(text);
     if (!parsed.name && !parsed.email) continue;
 
@@ -62,10 +62,10 @@ function parseRssAuthors(channel: Record<string, unknown>): ParsedAuthor[] {
   return out;
 }
 
-function parseRssItems(channel: Record<string, unknown>): ParsedItem[] {
-  const entries = toArray(channel.item as any);
+function parseRssItems(channel: XmlObject): ParsedItem[] {
+  const entries = toArray(channel.item);
   return entries.map((entry, index) => {
-    const item = toObject(entry as any);
+    const item = toObject(entry);
     if (!item) {
       throw new FeedParserError(`Invalid RSS item at index ${index}`);
     }
@@ -79,7 +79,7 @@ function parseRssItems(channel: Record<string, unknown>): ParsedItem[] {
       title,
       url: link,
       summary: toText(item.description),
-      contentHtml: toText(item["content:encoded"] as any),
+      contentHtml: toText(item["content:encoded"] as XmlValue | undefined),
       datePublished: safeIso(toText(item.pubDate)),
     };
   });

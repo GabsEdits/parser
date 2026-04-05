@@ -4,7 +4,7 @@ import {
   type ParsedFeed,
   type ParsedItem,
 } from "./types.ts";
-import { parseXml } from "./xml.ts";
+import { parseXml, type XmlObject } from "./xml.ts";
 import { safeIso, toArray, toObject, toText } from "./utils.ts";
 
 export function parseAtom(input: string): ParsedFeed {
@@ -33,10 +33,10 @@ export function parseAtom(input: string): ParsedFeed {
   };
 }
 
-function parseAtomAuthors(feed: Record<string, unknown>): ParsedAuthor[] {
-  const authors = toArray(feed.author as any);
+function parseAtomAuthors(feed: XmlObject): ParsedAuthor[] {
+  const authors = toArray(feed.author);
   return authors.map((author) => {
-    const node = toObject(author as any);
+    const node = toObject(author);
     if (!node) return {};
 
     return {
@@ -47,16 +47,17 @@ function parseAtomAuthors(feed: Record<string, unknown>): ParsedAuthor[] {
   }).filter((author) => author.name || author.email || author.url);
 }
 
-function parseAtomEntries(feed: Record<string, unknown>): ParsedItem[] {
-  const entries = toArray(feed.entry as any);
+function parseAtomEntries(feed: XmlObject): ParsedItem[] {
+  const entries = toArray(feed.entry);
   return entries.map((entry, index) => {
-    const node = toObject(entry as any);
+    const node = toObject(entry);
     if (!node) {
       throw new FeedParserError(`Invalid Atom entry at index ${index}`);
     }
 
     const id = toText(node.id) ?? toText(node.title) ?? `entry-${index + 1}`;
-    const content = toObject(node.content as any);
+    const content = toObject(node.content);
+    const contentType = toText(content?.["@_type"]);
 
     return {
       id,
@@ -65,8 +66,8 @@ function parseAtomEntries(feed: Record<string, unknown>): ParsedItem[] {
       summary: toText(node.summary),
       contentText: content
         ? toText(content["#text"])
-        : toText(node.content as any),
-      contentHtml: content?.["@_type"] === "html"
+        : toText(node.content),
+      contentHtml: content && contentType === "html"
         ? toText(content["#text"])
         : undefined,
       datePublished: safeIso(toText(node.published)),
@@ -76,17 +77,17 @@ function parseAtomEntries(feed: Record<string, unknown>): ParsedItem[] {
 }
 
 function pickAtomLink(
-  node: Record<string, unknown>,
+  node: XmlObject,
   rel = "alternate",
 ): string | undefined {
-  const links = toArray(node.link as any);
+  const links = toArray(node.link);
 
   for (const link of links) {
-    const linkObj = toObject(link as any);
+    const linkObj = toObject(link);
     if (!linkObj) continue;
 
-    const href = toText(linkObj["@_href"] as any);
-    const linkRel = toText(linkObj["@_rel"] as any) ?? "alternate";
+    const href = toText(linkObj["@_href"]);
+    const linkRel = toText(linkObj["@_rel"]) ?? "alternate";
     if (href && linkRel === rel) {
       return href;
     }
